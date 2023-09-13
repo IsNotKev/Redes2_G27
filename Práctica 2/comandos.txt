@@ -1,0 +1,344 @@
+|                  |VLAN |
+|------------------|-----|
+| Corporativo      |69   |
+| Ventas           |19   |
+| Distribución     |29   |
+
+-- Switch Multicapa 0 --
+
+ena
+conf t
+vlan 69
+name Corporativo
+exit
+vlan 19
+name Ventas
+exit
+do sh vlan brief
+
+int vlan 69
+ip address 192.168.79.1 255.255.255.0
+no shutdown
+exit
+
+int f0/1
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/2
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int vlan 19
+ip address 1.0.0.2 255.0.0.0
+no shutdown
+exit
+
+int g0/1
+switchport access vlan 19
+switchport mode access
+description ACC_VLAN19
+exit
+
+wr
+
+interface Port-Channel1
+switchport access vlan 69
+exit
+int f0/1
+channel-protocol lacp
+channel-group 1 mode active
+exit
+int f0/2
+channel-protocol lacp
+channel-group 1 mode active
+exit
+exit
+wr
+
+-- Switch Multicapa 1 --
+
+ena
+conf t
+vlan 19
+name Ventas
+exit
+vlan 29
+name Distribucion
+exit
+vlan 69
+name Corporativo
+exit
+do sh vlan brief
+
+int vlan 19
+ip address 1.0.0.1 255.0.0.0
+no shutdown
+exit
+
+int g0/1
+switchport access vlan 19
+switchport mode access
+description ACC_VLAN19
+exit
+
+int vlan 29
+ip address 2.0.0.1 255.0.0.0
+no shutdown
+exit
+
+int g0/2
+switchport access vlan 29
+switchport mode access
+description ACC_VLAN29
+exit
+
+int vlan 69
+ip address 192.168.89.1 255.255.255.0
+no shutdown
+exit
+
+int f0/1
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+wr
+
+-- Switch Multicapa 2 --
+
+ena
+conf t
+vlan 29
+name Distribucion
+exit
+vlan 69
+name Corporativo
+exit
+do sh vlan brief
+
+int vlan 29
+ip address 2.0.0.2 255.0.0.0
+no shutdown
+exit
+
+int g0/2
+switchport access vlan 29
+switchport mode access
+description ACC_VLAN29
+exit
+
+int vlan 69
+ip address 192.168.99.1 255.255.255.0
+no shutdown
+exit
+
+int f0/1
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/2
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+interface Port-Channel1
+switchport access vlan 69
+exit
+int f0/1
+channel-protocol lacp
+channel-group 2 mode active
+exit
+int f0/2
+channel-protocol lacp
+channel-group 2 mode active
+exit
+exit
+wr
+
+
+-- Switch 0 --
+
+ena
+conf t
+vlan 69
+name Corporativo
+exit
+do sh vlan brief
+
+int vlan 69
+ip address 192.168.79.1 255.255.255.0
+no shutdown
+exit
+
+int f0/1
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/2
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/11
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/12
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/13
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+exit
+wr
+
+interface Port-Channel1
+switchport access vlan 69
+exit
+int f0/1
+channel-protocol lacp
+channel-group 1 mode active
+exit
+int f0/2
+channel-protocol lacp
+channel-group 1 mode active
+exit
+exit
+wr
+
+-- Switch 1 --
+
+ena
+conf t
+vlan 69
+name Corporativo
+exit
+do sh vlan brief
+
+int vlan 69
+ip address 192.168.89.1 255.255.255.0
+no shutdown
+exit
+
+int f0/1
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/11
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+exit
+wr
+
+-- Switch 2 --
+
+ena
+conf t
+vlan 69
+name Corporativo
+exit
+do sh vlan brief
+
+int vlan 69
+ip address 192.168.99.1 255.255.255.0
+no shutdown
+exit
+
+int f0/1
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/2
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/11
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+int f0/12
+switchport access vlan 69
+switchport mode access
+description ACC_VLAN69
+exit
+
+exit
+wr
+
+ena
+conf t
+interface Port-Channel2
+switchport access vlan 69
+exit
+int f0/1
+channel-protocol lacp
+channel-group 2 mode active
+exit
+int f0/2
+channel-protocol lacp
+channel-group 2 mode active
+exit
+exit
+wr
+
+
+
+-- Para Switch multicapa 1 y 2
+en
+conf t
+ip routing
+router ospf 1
+network 2.0.0.0 0.0.0.255 area 1
+network 1.0.0.0 0.0.0.255 area 1
+network 192.168.79.0 0.0.0.255 area 1
+network 192.168.89.0 0.0.0.255 area 1
+network 192.168.99.0 0.0.0.255 area 1
+exit
+exit
+show run
+
+-- Para Switch multicapa 0 y 1
+en
+conf t
+ip routing
+router eigrp 2
+network 2.0.0.0
+network 1.0.0.0
+network 192.168.79.0
+network 192.168.89.0
+network 192.168.99.0
+no auto-summary
+exit
+exit
+show run
