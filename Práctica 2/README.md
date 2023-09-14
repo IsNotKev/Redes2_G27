@@ -186,11 +186,6 @@ do sh vlan brief
 
 ##### Asignando las VLANs
 ```
-int vlan 69
-ip address 192.168.79.1 255.255.255.0
-no shutdown
-exit
-
 int f0/1
 switchport access vlan 69
 switchport mode access
@@ -236,11 +231,6 @@ do sh vlan brief
 
 ##### Asignando las VLANs
 ```
-int vlan 69
-ip address 192.168.89.1 255.255.255.0
-no shutdown
-exit
-
 int f0/1
 switchport access vlan 69
 switchport mode access
@@ -268,11 +258,6 @@ do sh vlan brief
 
 ##### Asignando las VLANs
 ```
-int vlan 69
-ip address 192.168.99.1 255.255.255.0
-no shutdown
-exit
-
 int f0/1
 switchport access vlan 69
 switchport mode access
@@ -310,7 +295,7 @@ exit
 en
 conf t
 ip routing
-router eigrp 2
+router eigrp 20
 network 2.0.0.0
 network 1.0.0.0
 network 192.168.79.0
@@ -327,12 +312,12 @@ show run
 en
 conf t
 ip routing
-router ospf 1
-network 2.0.0.0 0.0.0.255 area 1
-network 1.0.0.0 0.0.0.255 area 1
-network 192.168.79.0 0.0.0.255 area 1
-network 192.168.89.0 0.0.0.255 area 1
-network 192.168.99.0 0.0.0.255 area 1
+router ospf 10
+network 2.0.0.0 0.0.0.255 area 10
+network 1.0.0.0 0.0.0.255 area 10
+network 192.168.79.0 0.0.0.255 area 10
+network 192.168.89.0 0.0.0.255 area 10
+network 192.168.99.0 0.0.0.255 area 10
 exit
 exit
 show run
@@ -342,7 +327,7 @@ show run
 ```
 ena
 conf t
-interface Port-Channel2
+interface Port-Channel 2
 switchport access vlan 69
 exit
 int f0/1
@@ -367,3 +352,6 @@ Prompt para la configuración de LACP
 Prompt para solucionar error de Port-Chanel al configurar LACP
 ![Prompt a ChatGPT](./img/CHAT5.png)
 ![Prompt a ChatGPT](./img/CHAT6.png)
+
+Prompt para verificar la configuracion LACP
+![Prompt a ChatGPT](./img/CHAT7.png)
