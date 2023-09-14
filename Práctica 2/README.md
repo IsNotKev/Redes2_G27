@@ -354,4 +354,5 @@ Prompt para solucionar error de Port-Chanel al configurar LACP
 ![Prompt a ChatGPT](./img/CHAT6.png)
 
 Prompt para verificar la configuracion LACP
+
 ![Prompt a ChatGPT](./img/CHAT7.png)
