@@ -9,20 +9,19 @@
 ---
 ### Topología
 
+![TOPO](./img/Topología.png)
 
 ### Direcciones de VLAN
 |                  |VLAN |
 |------------------|-----|
 | VLAN19           |19   |
 | VLAN29           |29   |
-| VLAN39           |39   |
 
-### Direcciones de red para los sectores de la VLAN Corporativa
+### Direcciones de red para los sectores de la VLAN
 |           | IP              |
 |-----------|-----------------|
 | Verde      | 192.168.19.0/24 |
 | Anaranjado | 192.168.29.0/24 |
-| Entre MSW | 192.168.39.0/24 |
 
 #### Configurando VTP
 ```
@@ -31,20 +30,6 @@ conf t
 vtp mode [client | server]
 vtp domain g27
 end
-```
-
-### Configurando VLANs
-```
-enable
-conf t
-vlan 19
-name VLAN19
-vlan 29
-name VLAN29
-vlan 39
-name VLAN39
-exit
-exit
 ```
 
 ### Habilitando modo trunkal
@@ -58,6 +43,17 @@ switchport mode trunk
 end
 ```
 
+### Configurando VLANs
+```
+enable
+conf t
+vlan 19
+name VLAN19
+vlan 29
+name VLAN29
+end
+```
+
 ### Habilitando modo acceso
 El modo acceso se utiliza para conectar dispositivos finales, como computadoras o impresoras a una única VLAN específica sin necesidad de etiquetas adicionales.
 ```
@@ -66,6 +62,7 @@ conf t
 interface range f0/11-12
 switchport mode access
 switchport access vlan 19
+description ACC_VLAN19
 exit
 exit
 ```
@@ -74,8 +71,8 @@ exit
 
 ```
 conf t
-interface vlan 39
-ip address 192.168.39.1 255.255.255.0
+interface vlan 19
+ip address 192.168.19.52 255.255.255.0
 no shutdown
 end
 ```
@@ -83,19 +80,19 @@ end
 ### Configurando HSRP 
 
 ```
-interface vlan 39
-ip address 192.168.39.1 255.255.255.0
-standby 39 ip 192.168.39.254
-standby 39 priority 110
-standby 39 preempt
+interface vlan 19
+ip address 192.168.19.52 255.255.255.0
+standby 0 ip 192.168.19.51
+standby 0 priority 10
+standby 0 preempt
 ```
 
 ```
-interface vlan 39
-ip address 192.168.39.2 255.255.255.0
-standby 39 ip 192.168.39.254
-standby 39 priority 100
-standby 39 preempt
+interface vlan 19
+ip address 192.168.19.53 255.255.255.0
+standby 0 ip 192.168.19.51
+standby 0 priority 10
+standby 0 preempt
 ```
 
 
@@ -125,18 +122,28 @@ ip routing
 router ospf 10
 network 192.168.19.0 0.0.0.255 area 10
 network 192.168.29.0 0.0.0.255 area 10
-network 192.168.39.0 0.0.0.255 area 10
 exit
 exit
 wr
 ```
 
+### Configuración DHCP
+
+![DHCP](./img/DHCP.png)
+
+### Servidor Web
+
+![SW](./img/WEB1.png)
+![SW](./img/WEB2.png)
+
 ### Prompts hechos a Chat GPT
 
 Configurar HSRP
+
 ![Prompt a ChatGPT](./img/prompt1.png)
 ![Prompt a ChatGPT](./img/prompt2.png)
 
 Configuracion trunk
+
 ![Prompt a ChatGPT](./img/prompt3.png)
 ![Prompt a ChatGPT](./img/prompt3.2.png)
